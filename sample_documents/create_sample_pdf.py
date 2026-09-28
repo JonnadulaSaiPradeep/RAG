@@ -1,0 +1,61 @@
+"""
+Utility script to generate a valid sample PDF for testing KnowFlow AI document ingestion.
+Uses standard library without external dependencies.
+"""
+
+def generate_simple_pdf(output_path: str):
+    content = (
+        "BT /F1 18 Tf 50 750 Td (KnowFlow AI Enterprise Specification 2026) Tj ET "
+        "BT /F1 12 Tf 50 710 Td (Author: JonnadulaSaiPradeep | Email: 231fa18264@gmail.com) Tj ET "
+        "BT /F1 12 Tf 50 670 Td (KnowFlow AI is a multi-document RAG platform utilizing Gemini, Sentence Transformers,) Tj ET "
+        "BT /F1 12 Tf 50 650 Td (and ChromaDB for high-precision enterprise question answering.) Tj ET "
+        "BT /F1 14 Tf 50 600 Td (Section 1: Ingestion and Vector Search) Tj ET "
+        "BT /F1 11 Tf 50 570 Td (PDF files are ingested, chunked recursively into 600-character segments,) Tj ET "
+        "BT /F1 11 Tf 50 550 Td (and converted into 384-dimensional dense vectors using all-MiniLM-L6-v2.) Tj ET "
+        "BT /F1 14 Tf 50 500 Td (Section 2: Gemini Grounded Synthesis) Tj ET "
+        "BT /F1 11 Tf 50 470 Td (Google Gemini 1.5 Flash provides fast, hallucination-free generation with source citations.) Tj ET "
+        "BT /F1 11 Tf 50 450 Td (Every answer links back to exact page numbers and document provenance.) Tj ET"
+    )
+    stream_len = len(content.encode("latin-1"))
+
+    pdf_template = f"""%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length {stream_len} >>
+stream
+{content}
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000236 00000 n 
+0000000{305 + stream_len:03d} 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+{375 + stream_len}
+%%EOF
+"""
+    with open(output_path, "wb") as f:
+        f.write(pdf_template.encode("latin-1"))
+    print(f"Generated sample PDF at: {output_path}")
+
+if __name__ == "__main__":
+    import os
+    target = os.path.join(os.path.dirname(__file__), "KnowFlow_AI_Overview_2026.pdf")
+    generate_simple_pdf(target)

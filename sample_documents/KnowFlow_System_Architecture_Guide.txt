@@ -1,0 +1,31 @@
+# KnowFlow AI — Technical Architecture & Implementation Guide (2026)
+
+## System Overview
+KnowFlow AI is a high-performance, enterprise-grade multi-document Retrieval-Augmented Generation (RAG) platform. It provides document-grounded question answering, contextual knowledge discovery, and source verification using modern GenAI architectures.
+
+## Core Architectural Components
+
+1. Document Processing & Ingestion Pipeline:
+   - Supports heterogeneous file formats including PDF, TXT, and Markdown.
+   - Text extraction retains page-level granularity and document provenance.
+   - Normalization removes non-printable characters and standardizes whitespace.
+
+2. Recursive Chunking Engine:
+   - Splits document text using hierarchical separators (paragraphs -> sentences -> words).
+   - Standard chunk size: 600 characters with 120-character overlap to preserve semantic continuity across chunk boundaries.
+   - Every chunk is assigned a deterministic chunk ID incorporating source file name and page number.
+
+3. Embedding Generation Subsystem:
+   - Utilizes Sentence Transformers (model: all-MiniLM-L6-v2, 384-dimensional dense vector space).
+   - Generates L2-normalized embeddings for fast cosine distance calculations.
+   - Embeddings are cached to avoid redundant computation across repeated documents.
+
+4. Vector Database (ChromaDB):
+   - Stores dense vectors along with full metadata (filename, page number, chunk index, character length).
+   - Cosine space indexing enables sub-millisecond retrieval of top-k nearest neighbors.
+   - Persistent disk storage ensures that indexed documents survive application restarts.
+
+5. Generation & Attribution Engine (Google Gemini):
+   - Integrates Google Gemini LLMs (Gemini 1.5 Flash / Gemini 1.5 Pro) with low temperature (0.2) for high factual fidelity.
+   - Injects structured retrieved context into the system prompt with strict grounding constraints.
+   - Formats outputs with inline brackets and expandable source citations to verify factual provenance.

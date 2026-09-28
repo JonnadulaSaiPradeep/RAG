@@ -6,5 +6,5 @@ echo =========================================================
 echo Activating virtual environment (.venv)...
 call .venv\Scripts\activate.bat
 echo Starting Streamlit Web Application...
-streamlit run app.py
+python -m streamlit run app.py
 pause

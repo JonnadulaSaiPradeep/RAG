@@ -51,7 +51,7 @@ def run_verification():
     for s in res2["sources"]:
         print(f" - {s['source']} (Page {s['page']}): Sim {s['similarity_score']*100:.1f}%")
 
-    print("\n✅ Verification Completed Successfully!")
+    print("\n[SUCCESS] Verification Completed Successfully!")
 
 if __name__ == "__main__":
     run_verification()
